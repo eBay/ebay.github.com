@@ -1,5 +1,4 @@
 (function () {
-    var base_url = 'file:///Users/jbrittain/vc/ebay.github.com';
     var ebay_org_projects = { projects: [
         { org: 'ebay', repo: '*', ebayOrg: 'eBay Marketplaces' },
         { org: 'ebaysf', repo: '*', ebayOrg: 'eBay Marketplaces' },
@@ -37,6 +36,13 @@
     var repos = [];
     var repos_results = [];
     var total_members = 0;
+    var sortingProperties = [
+        '-pushed_at_utime', 
+        '-forks_count', 
+        '-watchers_count', 
+        '-created_at_utime', 
+        'language'
+    ];
 
     var my = {
 
@@ -59,25 +65,14 @@
 
         sortRepos: function(algorithm) {
             if (algorithm == undefined) algorithm = 1;
-            //alert('sort: ' + algorithm);
+            if (algorithm > sortingProperties.length || algorithm < 0)
+                return
 
-            if (algorithm == 1 /* Most active */) {
-                repos_results.sort(my.dynamicSort('-pushed_at_utime'));
-            } else if (algorithm == 2 /* Activity: Number of forks */) {
-                repos_results.sort(my.dynamicSort('-forks_count'));
-            } else if (algorithm == 3 /* Activity: number of stars */) {
-                repos_results.sort(my.dynamicSort('-watchers_count'));
-            } else if (algorithm == 4 /* Time: creation date */) {
-                repos_results.sort(my.dynamicSort('-created_at_utime'));
-            } else if (algorithm == 5 /* Tech: programming language */) {
-                repos_results.sort(my.dynamicSort('language'));
-            }
-
+            repos_results.sort(my.dynamicSort(sortingProperties[algorithm - 1]));
             my.updateResults();
         },
 
         searchRegexpMatch: function(query) {
-            //alert('searching for regexp matches: ' + query);
             for (var i = 0; i < repos_results.length; i++) {
                 var re = new RegExp(query, 'i');
                 if (repos_results[i].full_name.match(re) ||
@@ -95,7 +90,6 @@
             if (query == '') {
                 query = '.*';
             }
-            //alert('search: ' + query);
 
             // Reset results to the full set by cloning the array, then filter.
             repos_results = repos.slice(0);
