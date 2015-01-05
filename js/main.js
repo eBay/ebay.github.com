@@ -64,9 +64,8 @@
         },
 
         sortRepos: function(algorithm) {
-            if (algorithm == undefined) algorithm = 1;
-            if (algorithm > sortingProperties.length || algorithm < 0)
-                return
+            if (algorithm == undefined || algorithm > sortingProperties.length || algorithm < 0)
+                algorithm = 1;
 
             repos_results.sort(my.dynamicSort(sortingProperties[algorithm - 1]));
             my.updateResults();
